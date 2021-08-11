@@ -17,6 +17,7 @@ package com.amazonaws.eclipse.lambda;
 import java.net.URLDecoder;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import com.amazonaws.auth.policy.Action;
 import com.amazonaws.auth.policy.Policy;
@@ -35,7 +36,10 @@ import com.amazonaws.services.lambda.model.ListFunctionsResult;
 
 public class ServiceApiUtils {
 
-    public static final String JAVA_8 = "java8";
+	public static final String JAVA_8 = "java8";
+	public static final String JAVA_11 = "java11";
+	public static final Set<String> LAMBDA_JAVA_VERSIONS = Set.of(JAVA_8, JAVA_11);
+    public static final String LAMBDA_JAVA_VERSION = JAVA_11;
 
     private static final String LAMBDA_DOT_AMAZONAWS_DOT_COM = "lambda.amazonaws.com";
 
@@ -96,7 +100,7 @@ public class ServiceApiUtils {
     }
 
     private static boolean isJavaFunction(FunctionConfiguration function) {
-        return JAVA_8.equals(function.getRuntime());
+        return LAMBDA_JAVA_VERSIONS.contains(function.getRuntime());
     }
 
     private static boolean canBeAssumedByLambda(Role role) {

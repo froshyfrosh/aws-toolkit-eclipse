@@ -55,7 +55,7 @@ public class UploadFunctionWizardDataModel {
 
         return new CreateFunctionRequest()
                 .withFunctionName(functionDataModel.getFunctionName())
-                .withRuntime(ServiceApiUtils.JAVA_8)
+                .withRuntime(ServiceApiUtils.LAMBDA_JAVA_VERSION)
                 .withDescription(functionConfigPageDataModel.getDescription())
                 .withHandler(getHandler())
                 .withRole(getLambdaRoleDataModel().getExistingResource().getArn())
