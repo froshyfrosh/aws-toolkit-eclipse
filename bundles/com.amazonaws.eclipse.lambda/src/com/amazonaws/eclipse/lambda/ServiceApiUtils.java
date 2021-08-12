@@ -36,10 +36,11 @@ import com.amazonaws.services.lambda.model.ListFunctionsResult;
 
 public class ServiceApiUtils {
 
+	// TODO Get Java version from the 'com.amazonaws.services.lambda.model.Runtime' enum
 	public static final String JAVA_8 = "java8";
 	public static final String JAVA_11 = "java11";
-	public static final Set<String> LAMBDA_JAVA_VERSIONS = Set.of(JAVA_8, JAVA_11);
-    public static final String LAMBDA_JAVA_VERSION = JAVA_11;
+	public static final List<String> LAMBDA_JAVA_VERSIONS = List.of(JAVA_8, JAVA_11);
+    public static final String DEFAULT_LAMBDA_JAVA_VERSION = JAVA_11;
 
     private static final String LAMBDA_DOT_AMAZONAWS_DOT_COM = "lambda.amazonaws.com";
 

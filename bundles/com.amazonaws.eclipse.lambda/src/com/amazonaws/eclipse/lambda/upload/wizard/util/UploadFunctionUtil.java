@@ -162,6 +162,7 @@ public class UploadFunctionUtil {
         LambdaFunctionProjectMetadata md = dataModel.getProjectMetadataBeforeUpload();
         md.setLastDeploymentHandler(dataModel.getHandler());
         md.setLastDeploymentRegion(dataModel.getRegionDataModel().getRegion().getId());
+        md.setLastDeploymentJavaVersion(dataModel.getJavaVersion());
         md.setLastDeploymentFunctionName(functionName);
         md.setLastDeploymentBucketName(bucketName);
         md.setLastDeploymentRoleName(dataModel.getLambdaRoleDataModel().getExistingResource().getRoleName());

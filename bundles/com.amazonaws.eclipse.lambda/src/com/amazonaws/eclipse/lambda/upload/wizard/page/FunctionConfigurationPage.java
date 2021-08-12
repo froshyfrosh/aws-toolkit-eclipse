@@ -26,6 +26,7 @@ import static com.amazonaws.eclipse.lambda.upload.wizard.model.FunctionConfigPag
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.core.databinding.AggregateValidationStatus;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -34,6 +35,7 @@ import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlAdapter;
@@ -56,10 +58,12 @@ import com.amazonaws.eclipse.core.model.AbstractAwsResourceScopeParam.AwsResourc
 import com.amazonaws.eclipse.core.ui.SelectOrCreateBucketComposite;
 import com.amazonaws.eclipse.core.ui.SelectOrCreateKmsKeyComposite;
 import com.amazonaws.eclipse.core.widget.CheckboxComplex;
+import com.amazonaws.eclipse.core.widget.ComboViewerComplex;
 import com.amazonaws.eclipse.core.widget.RadioButtonComplex;
 import com.amazonaws.eclipse.core.widget.TextComplex;
 import com.amazonaws.eclipse.databinding.RangeValidator;
 import com.amazonaws.eclipse.lambda.LambdaConstants;
+import com.amazonaws.eclipse.lambda.ServiceApiUtils;
 import com.amazonaws.eclipse.lambda.model.LambdaFunctionAliasesScopeParam;
 import com.amazonaws.eclipse.lambda.project.metadata.LambdaFunctionProjectMetadata;
 import com.amazonaws.eclipse.lambda.project.metadata.LambdaFunctionProjectMetadata.LambdaFunctionDeploymentMetadata;
@@ -87,6 +91,9 @@ public class FunctionConfigurationPage extends WizardPageWithOnEnterHook {
     /* Basic settings */
     private Label functionNameLabel;
     private TextComplex descriptionTextComplex;
+    
+    /* Java version */
+    private ComboViewerComplex<String> javaVersionComboViewerComplex;
 
     /* Function execution role setting */
     private SelectOrCreateBasicLambdaRoleComposite selectOrCreateBasicLambdaRoleComposite;
@@ -165,6 +172,7 @@ public class FunctionConfigurationPage extends WizardPageWithOnEnterHook {
         scrolledComposite.setContent(functionConfigurationComposite);
 
         createBasicSettingSection(functionConfigurationComposite);
+        createJavaVersionSettingSection(functionConfigurationComposite);
         createFunctionRoleSettingSection(functionConfigurationComposite);
         createFunctionVersioningAndAliasSettingSection(functionConfigurationComposite);
         createS3BucketSection(functionConfigurationComposite);
@@ -188,6 +196,7 @@ public class FunctionConfigurationPage extends WizardPageWithOnEnterHook {
             descriptionTextComplex.setText(function.getDescription());
             memoryTextComplex.setText(String.valueOf(function.getMemorySize()));
             timeoutTextComplex.setText(String.valueOf(function.getTimeout()));
+            javaVersionComboViewerComplex.selectItem(function.getRuntime());
         }
     }
 
@@ -208,6 +217,29 @@ public class FunctionConfigurationPage extends WizardPageWithOnEnterHook {
                 .build();
     }
 
+    private void createJavaVersionSettingSection(Composite parent) {
+        Composite javaVersionComposite = newComposite(parent, 1, 2);
+        javaVersionComboViewerComplex = ComboViewerComplex.<String>builder()
+                .composite(javaVersionComposite)
+                .bindingContext(bindingContext)
+                .pojoObservableValue(PojoProperties.value(FunctionConfigPageDataModel.P_JAVA_VERSION).observe(dataModel))
+                .defaultItem(dataModel.getJavaVersion())
+                .labelValue("Select the Java version:")
+                .addListeners(e -> onJavaVersionSelectionChange())
+                .labelProvider(new LabelProvider() {
+                    @Override
+                    public String getText(Object element) {
+                        return Optional.ofNullable(element).map(Object::toString).orElse("");
+                    }
+                })
+                .items(ServiceApiUtils.LAMBDA_JAVA_VERSIONS)
+                .build();
+    }
+
+    private void onJavaVersionSelectionChange() {
+    	// TODO Effects on other settings?
+    }
+    
     private void createFunctionRoleSettingSection(Composite parent) {
         Group group = newGroup(parent, "Function Role");
         setItalicFont(newLink(

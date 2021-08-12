@@ -95,6 +95,7 @@ public class UploadFunctionWizard extends AbstractAwsJobWizard {
 
         if (md != null && md.getLastDeploymentHandler() != null) {
             dataModel.setHandler(md.getLastDeploymentHandler());
+            dataModel.setJavaVersion(md.getLastDeploymentJavaVersion());
         }
     }
 

@@ -71,6 +71,19 @@ public class LambdaFunctionProjectMetadata {
     }
 
     @JsonIgnore
+    public String getLastDeploymentJavaVersion() {
+        LambdaFunctionDeploymentMetadata lastDeploy = getLastDeployment();
+        return lastDeploy == null ? null : lastDeploy.getJavaVersion();
+    }
+
+    public void setLastDeploymentJavaVersion(String javVersion) {
+        LambdaFunctionDeploymentMetadata lastDeploy = getLastDeployment();
+        if (lastDeploy != null) {
+            lastDeploy.setJavaVersion(javVersion);
+        }
+    }
+    
+    @JsonIgnore
     public String getLastDeploymentBucketName() {
         LambdaFunctionDeploymentMetadata lastDeploy = getLastDeployment();
         return lastDeploy == null ? null : lastDeploy.getAwsS3BucketName();
@@ -224,7 +237,7 @@ public class LambdaFunctionProjectMetadata {
     public void setLastInvokeHandler(String lastInvokeHandler) {
         this.lastInvokeHandler = lastInvokeHandler;
     }
-
+    
     /**
      * Cached settings for the operations to a Lambda function.
      */
@@ -256,6 +269,7 @@ public class LambdaFunctionProjectMetadata {
         private String awsLambdaFunctionName;
         private String awsIamRoleName;
         private String awsS3BucketName;
+        private String javaVersion;
         private int memory;
         private int timeout;
 
@@ -283,6 +297,12 @@ public class LambdaFunctionProjectMetadata {
         public void setAwsS3BucketName(String awsS3BucketName) {
             this.awsS3BucketName = awsS3BucketName;
         }
+        public String getJavaVersion() {
+			return javaVersion;
+		}
+        public void setJavaVersion(String javaVersion) {
+			this.javaVersion = javaVersion;
+		}
         public int getMemory() {
             return memory;
         }

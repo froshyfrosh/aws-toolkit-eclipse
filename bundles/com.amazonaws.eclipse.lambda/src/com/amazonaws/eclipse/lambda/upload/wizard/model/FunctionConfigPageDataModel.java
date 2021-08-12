@@ -24,6 +24,7 @@ public class FunctionConfigPageDataModel {
     public static final String P_NONE_ENCRYPTION = "noneEncryption";
     public static final String P_S3_ENCRYPTION = "s3Encryption";
     public static final String P_KMS_ENCRYPTION = "kmsEncryption";
+    public static final String P_JAVA_VERSION = "javaVersion";
 
     private String description;
     private boolean publishNewVersion;
@@ -33,6 +34,7 @@ public class FunctionConfigPageDataModel {
     private boolean noneEncryption = true;
     private boolean s3Encryption = false;
     private boolean kmsEncryption = false;
+    private String javaVersion;
 
     public String getDescription() {
         return description;
@@ -97,4 +99,12 @@ public class FunctionConfigPageDataModel {
     public void setKmsEncryption(boolean kmsEncryption) {
         this.kmsEncryption = kmsEncryption;
     }
+    
+    public String getJavaVersion() {
+		return javaVersion;
+	}
+    
+    public void setJavaVersion(String javaVersion) {
+		this.javaVersion = javaVersion;
+	}
 }

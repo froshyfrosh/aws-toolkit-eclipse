@@ -16,6 +16,7 @@ package com.amazonaws.eclipse.lambda.upload.wizard.model;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.IJavaElement;
@@ -45,6 +46,7 @@ public class UploadFunctionWizardDataModel {
     private final SelectOrInputFunctionDataModel functionDataModel = new SelectOrInputFunctionDataModel();
 
     /* Page 2 */
+    private String javaVersion;
     private final SelectOrCreateBasicLambdaRoleDataModel lambdaRoleDataModel = new SelectOrCreateBasicLambdaRoleDataModel();
     private final SelectOrInputFunctionAliasDataModel functionAliasDataModel = new SelectOrInputFunctionAliasDataModel();
     private final SelectOrCreateBucketDataModel s3BucketDataModel = new SelectOrCreateBucketDataModel();
@@ -52,10 +54,10 @@ public class UploadFunctionWizardDataModel {
     private final FunctionConfigPageDataModel functionConfigPageDataModel = new FunctionConfigPageDataModel();;
 
     public CreateFunctionRequest toCreateFunctionRequest() {
-
         return new CreateFunctionRequest()
                 .withFunctionName(functionDataModel.getFunctionName())
-                .withRuntime(ServiceApiUtils.LAMBDA_JAVA_VERSION)
+                .withRuntime(Optional.ofNullable(functionConfigPageDataModel.getJavaVersion())
+                		             .orElse(ServiceApiUtils.DEFAULT_LAMBDA_JAVA_VERSION))
                 .withDescription(functionConfigPageDataModel.getDescription())
                 .withHandler(getHandler())
                 .withRole(getLambdaRoleDataModel().getExistingResource().getArn())
@@ -67,6 +69,8 @@ public class UploadFunctionWizardDataModel {
     public UpdateFunctionConfigurationRequest toUpdateFunctionConfigRequest() {
         return new UpdateFunctionConfigurationRequest()
                 .withFunctionName(functionDataModel.getFunctionName())
+                .withRuntime(Optional.ofNullable(functionConfigPageDataModel.getJavaVersion())
+                		             .orElse(ServiceApiUtils.DEFAULT_LAMBDA_JAVA_VERSION))
                 .withDescription(functionConfigPageDataModel.getDescription())
                 .withHandler(getHandler())
                 .withRole(getLambdaRoleDataModel().getExistingResource().getArn())
@@ -131,6 +135,14 @@ public class UploadFunctionWizardDataModel {
 
     public SelectOrInputFunctionAliasDataModel getFunctionAliasDataModel() {
         return functionAliasDataModel;
+    }
+
+    public String getJavaVersion() {
+        return javaVersion;
+    }
+    
+    public void setJavaVersion(String javaVersion) {
+        this.javaVersion = javaVersion;
     }
 
     public RegionDataModel getRegionDataModel() {
